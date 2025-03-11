@@ -5,6 +5,8 @@ class CustonUser(AbstractUser):
     is_aluno = models.BooleanField(default=False)
 
 
+
+
 # # Create your models here.
 # class Funcionario(models.Model):
 #     nome = models.CharField( max_length=255, null=False, blank=False)
