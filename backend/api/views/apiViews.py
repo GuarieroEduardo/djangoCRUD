@@ -1,7 +1,8 @@
-from rest_framework import viewsets, status
+from rest_framework import status
+from django.contrib.auth.hashers import make_password
 from api.models import *
 from api.serializers import *
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.response import Response    
@@ -14,8 +15,8 @@ class User(APIView):
     def get(self, request, id=None):
 
         if id:
-            usuario = get_list_or_404(CustonUser, pk=id)
-            serializer = UserSerializer(usuario, many=True)
+            usuario = get_object_or_404(CustonUser, pk=id)
+            serializer = UserSerializer(usuario)
             return Response(serializer.data, status=status.HTTP_200_OK)
        
         usuarios = CustonUser.objects.all()
@@ -23,24 +24,36 @@ class User(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        nome = request.data.get('nome')
+        senha = request.data.get('senha')
+
+        if not nome or not senha:
+            return Response({'message': 'Os campos "nome" e "senha" são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        usuario = CustonUser.objects.create(
+            username=nome,
+            password=make_password(senha),
+            is_active=True,
+            is_aluno=True
+        )
+
+        return Response({"message": "Usuário criado com sucesso.", "id": usuario.id}, status=status.HTTP_201_CREATED)
+
+
     
+    def put(self, request, id):
+        usuario = get_object_or_404(CustonUser, pk=id)
+        seliazer = UserSerializer(usuario, data=request.data, partial=True)
+        if seliazer.is_valid():
+            seliazer.save()
+            return Response(seliazer.data, status=status.HTTP_200_OK)  
+    
+
     def delete(self, request, pk):
         user = CustonUser.objects.get(pk=pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    def put(self, request, pk):
-        user = CustonUser.objects.get(pk=pk)
-        serializer = UserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
     def post(self, request):

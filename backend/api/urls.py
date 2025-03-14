@@ -12,7 +12,7 @@ from api.views.webViews import *
 urlpatterns = [
     # path('api/', include(router.urls)),
     path('api/user/', User.as_view(), name='userAPI'),
-    path('api/user/<int:id>', User.as_view(), name='userAPI'),
+    path('api/user/<int:id>', User.as_view(), name='userAPIid'),
     path('api/login/', Login.as_view(), name='loginAPI'),
     path('home/', home, name="home"),
     path('criarAluno/', criarAluno, name="criarAluno"),
