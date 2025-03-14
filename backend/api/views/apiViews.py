@@ -45,15 +45,18 @@ class User(APIView):
         usuario = get_object_or_404(CustonUser, pk=id)
         seliazer = UserSerializer(usuario, data=request.data, partial=True)
         if seliazer.is_valid():
+            
             seliazer.save()
             return Response(seliazer.data, status=status.HTTP_200_OK)  
     
 
-    def delete(self, request, pk):
-        user = CustonUser.objects.get(pk=pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
+    def delete(self, request, id):
+        usuario = get_object_or_404(CustonUser, pk=id)
+        if usuario:
+            usuario.delete()
+            return Response({"status":status.HTTP_200_OK})
+        else:
+            return Response({"status":status.HTTP_404_NOT_FOUND})
 
 class Login(APIView):
     def post(self, request):
