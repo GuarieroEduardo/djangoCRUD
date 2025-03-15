@@ -1,4 +1,6 @@
+
 {% load static%}
+
 <table class='table table-bordered'>
     <thead>
         <tr>
@@ -17,13 +19,14 @@
     <td> {{i.password}} </td>
     <td>
         <button class="btn btn-danger" onclick="deletar({{i.id}})">Deletar</button>
-        <button class="btn btn-primary">Editar</button>
+        <button class="btn btn-primary"><a href="/criarAluno/{{i.id}}"></a></button>
     </td>
     </tr>
     {% endfor%}
 
 
-    </tbody>
+</tbody>
 </table>
-
 <script src="{% static 'js/listarAlunos.js'%}"></script>
+
+

@@ -1,4 +1,6 @@
+{% extends 'base.html'%}
 
+{% block content %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,7 +11,7 @@
   </head>
   <body>
     <h1>Home</h1>
-    
+    {% csrf_token %}
     <a href="/criarAluno"> 
       <button>
         Cadastrar
@@ -23,3 +25,5 @@
     
   </body>
 </html>
+
+{% endblock %}
