@@ -43,9 +43,15 @@ class User(APIView):
     
     def put(self, request, id):
         usuario = get_object_or_404(CustonUser, pk=id)
+
+        senha = request.data.get('password', None)
+
+        if senha and senha != usuario.password:
+            request.data['password'] = make_password(senha)
+
+
         seliazer = UserSerializer(usuario, data=request.data, partial=True)
-        if seliazer.is_valid():
-            
+        if seliazer.is_valid():            
             seliazer.save()
             return Response(seliazer.data, status=status.HTTP_200_OK)  
     
@@ -72,4 +78,14 @@ class Login(APIView):
             return Response({'masage': "Usuário não autenticado", "status": status.HTTP_401_UNAUTHORIZED})
             
 
+class GetDadosUsuarioLogado(APIView):
+    def get(self, request):
+        usuarioID = request.session.get('_auth_user_id')
 
+        if (usuarioID):
+            usuario = CustonUser.objects.filter(id=usuarioID).first()
+            serializer = UserSerializer(usuario)
+            return Response(serializer.data)
+        
+        return Response(usuarioID)
+        

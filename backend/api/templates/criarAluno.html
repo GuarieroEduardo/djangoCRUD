@@ -14,7 +14,7 @@
     <form method="POST" id='alunoForm' >
         {% csrf_token %}
         <input type="text" placeholder="Nome" id='nome' value={% if aluno%} {{aluno.username}} {% endif %}>
-        <input type="senha" placeholder="Senha" id='senha' value={% if aluno%} {{aluno.password}} {% endif %}>
+        <input type="password" placeholder="Senha" id='senha' value={% if aluno%} {{aluno.password}} {% endif %}>
         <button type="submit">
             {% if aluno%}
                 Editar

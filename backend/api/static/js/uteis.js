@@ -16,7 +16,7 @@ async function apiFetch(url, method="GET", body=null, headers={}) {
         return await resposta.json()
 
     } catch (error) {
-        
+       
     }
 }
 
